@@ -1,0 +1,26 @@
+#!/bin/bash
+
+GITURL='https://github.com/secretescapes/grails-petclinic'
+SOURCE=`basename $GITURL`
+
+# pull source
+
+if [[ ! -e $SOURCE ]]; then
+git clone $GITURL
+fi
+
+if [[ "$?" != 0 || ! -e $SOURCE ]] ; then
+  echo "cloning of source from github failed"
+  exit 1
+fi
+
+# build source
+cd $SOURCE && git pull
+./grailsw war
+
+# provision server
+vagrant up --provision
+
+## includes copying up file and restarting tomcat
+
+
