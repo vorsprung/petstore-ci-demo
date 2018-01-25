@@ -2,25 +2,40 @@
 
 GITURL='https://github.com/secretescapes/grails-petclinic'
 SOURCE=`basename $GITURL`
+CRONPATH="/etc/cron.d/petci"
 
-# pull source
 
-if [[ ! -e $SOURCE ]]; then
-git clone $GITURL
+# set up crontab once
+
+if [[ ! -e "$CRONPATH" ]]; then
+    sudo su -c "echo 'MAILTO=\"\"' > $CRONPATH; echo '*/2 * * * * ' $PWD/installer >> $CRONPATH"
 fi
 
+# initial clone of source 
+if [[ ! -e $SOURCE ]]; then
+git clone $GITURL
+else
+
+# check for clone errors
 if [[ "$?" != 0 || ! -e $SOURCE ]] ; then
   echo "cloning of source from github failed"
   exit 1
 fi
 
-# build source
-cd $SOURCE && git pull
+cd $SOURCE 
+RES=`git pull`
+# if nothing has changed on the remote, then take no further action
+if [[ "$RES" == "Already up-to-date." ]]; then
+    echo "no changes in the repository so nothing to do"
+    exit 0
+fi
+fi
+
+echo "starting build"
 ./grailsw war
 
-# provision server
+# provision server, see Vagrantfile
 vagrant up --provision
 
-## includes copying up file and restarting tomcat
 
 
