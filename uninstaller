@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "disabling cronjob"
+
+sudo rm -f '/etc/cron.d/petci'
+
+echo "stopping remote tomcat"
+
+vagrant ssh 'sudo systemctl stop tomcat7'
+
+
