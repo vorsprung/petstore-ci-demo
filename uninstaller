@@ -6,6 +6,6 @@ sudo rm -f '/etc/cron.d/petci'
 
 echo "stopping remote tomcat"
 
-vagrant ssh 'sudo systemctl stop tomcat7'
+vagrant ssh -- 'sudo systemctl stop tomcat7'
 
 

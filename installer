@@ -3,6 +3,7 @@
 GITURL='https://github.com/secretescapes/grails-petclinic'
 SOURCE=`basename $GITURL`
 CRONPATH="/etc/cron.d/petci"
+JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 
 # set up crontab once
@@ -14,15 +15,12 @@ fi
 # initial clone of source 
 if [[ ! -e $SOURCE ]]; then
 git clone $GITURL
-else
-
 # check for clone errors
 if [[ "$?" != 0 || ! -e $SOURCE ]] ; then
   echo "cloning of source from github failed"
   exit 1
 fi
-
-cd $SOURCE 
+else
 RES=`git pull`
 # if nothing has changed on the remote, then take no further action
 if [[ "$RES" == "Already up-to-date." ]]; then
@@ -31,6 +29,7 @@ if [[ "$RES" == "Already up-to-date." ]]; then
 fi
 fi
 
+cd $SOURCE 
 echo "starting build"
 ./grailsw war
 
