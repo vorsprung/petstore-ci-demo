@@ -9,7 +9,7 @@ JAVA_HOME=/usr/lib/jvm/java-8-oracle
 # set up crontab once
 
 if [[ ! -e "$CRONPATH" ]]; then
-    sudo su -c "echo 'MAILTO=\"\"' > $CRONPATH; echo '*/2 * * * * ' $PWD/installer >> $CRONPATH"
+    sudo su -c "echo 'MAILTO=\"\"' > $CRONPATH; echo '*/2 * * * * ' $USER cd $PWD \&\& bash ./installer >> $CRONPATH"
 fi
 
 # initial clone of source 
